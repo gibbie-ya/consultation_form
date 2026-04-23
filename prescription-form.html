@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Ayurveda · Vaidya Prescription Form</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --gold:#8B6914;--gold-light:#C9A84C;--cream:#FAF7F2;
+    --border:#E8DFC8;--text:#2C2416;--muted:#8C7A5E;
+    --leaf:#3B6B2A;--leaf-light:#EBF4E6;
+    --font-display:'Cormorant Garamond',serif;
+    --font-body:'Jost',sans-serif;
+  }
+  body{background:#FDFAF5;font-family:var(--font-body);color:var(--text);min-height:100vh;padding:2rem 1rem}
+  .wrap{max-width:640px;margin:0 auto;padding-bottom:3rem}
+  .header{text-align:center;margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:0.5px solid var(--border)}
+  .lotus{font-size:32px;display:block;margin-bottom:0.75rem}
+  h1{font-family:var(--font-display);font-size:30px;font-weight:600;letter-spacing:0.02em;color:var(--text);line-height:1.2}
+  .subtitle{font-size:12px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-top:6px}
+  .patient-section{background:var(--cream);border:0.5px solid var(--border);border-radius:10px;padding:1.25rem 1.5rem;margin-bottom:1.5rem}
+  .field-label{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;display:block}
+  .patient-input{width:100%;padding:10px 14px;border:0.5px solid var(--border);border-radius:6px;font-family:var(--font-body);font-size:15px;background:#fff;color:var(--text);outline:none;transition:border-color 0.2s}
+  .patient-input:focus{border-color:var(--gold-light)}
+  .date-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+  .products-header{display:grid;grid-template-columns:1fr 80px;gap:12px;padding:0 1.5rem 8px;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted)}
+  .product-list{display:flex;flex-direction:column}
+  .product-row{display:grid;grid-template-columns:1fr 80px;align-items:center;gap:12px;padding:8px 1.5rem;border-bottom:0.5px solid var(--border);transition:background 0.15s}
+  .product-row:first-child{border-top:0.5px solid var(--border)}
+  .product-row:hover{background:var(--cream)}
+  .product-name{font-size:14px;color:var(--text)}
+  .qty-input{width:72px;padding:6px 10px;border:0.5px solid var(--border);border-radius:6px;font-family:var(--font-body);font-size:14px;text-align:center;background:#fff;color:var(--text);outline:none;transition:border-color 0.2s,background 0.2s}
+  .qty-input:focus{border-color:var(--gold-light);background:#fffdf7}
+  .qty-input.has-value{border-color:var(--leaf);background:var(--leaf-light);color:var(--leaf);font-weight:500}
+  .notes-section{margin-top:1.5rem}
+  textarea.notes-input{width:100%;padding:12px 14px;border:0.5px solid var(--border);border-radius:8px;font-family:var(--font-body);font-size:14px;background:#fff;color:var(--text);resize:vertical;min-height:80px;outline:none;transition:border-color 0.2s}
+  textarea.notes-input:focus{border-color:var(--gold-light)}
+  .submit-row{margin-top:1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+  .clear-btn{font-family:var(--font-body);font-size:13px;color:var(--muted);background:none;border:none;cursor:pointer;padding:8px 0;letter-spacing:0.04em;text-decoration:underline;text-underline-offset:3px}
+  .clear-btn:hover{color:var(--text)}
+  .submit-btn{font-family:var(--font-body);font-size:14px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:#fff;background:var(--gold);border:none;border-radius:8px;padding:12px 32px;cursor:pointer;transition:background 0.2s,transform 0.1s}
+  .submit-btn:hover{background:#7a5c12}
+  .submit-btn:active{transform:scale(0.98)}
+  .submit-btn:disabled{background:#c4b08a;cursor:not-allowed}
+  .status{font-size:13px;font-weight:500;display:none;padding:8px 14px;border-radius:6px}
+  .status.success{display:block;color:var(--leaf);background:var(--leaf-light);border:0.5px solid var(--leaf)}
+  .status.error{display:block;color:#a32d2d;background:#fcebeb;border:0.5px solid #f09595}
+  .status.sending{display:block;color:var(--muted);background:var(--cream);border:0.5px solid var(--border)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <span class="lotus">☘</span>
+    <h1>Treatment Prescription</h1>
+    <p class="subtitle">Your Ayurveda · Vaidya Prescription Form</p>
+  </div>
+
+  <div class="patient-section">
+    <label class="field-label">Patient name</label>
+    <input class="patient-input" id="patientName" type="text" placeholder="Full name" autocomplete="off">
+    <div class="date-row">
+      <div>
+        <label class="field-label">Consultation date</label>
+        <input class="patient-input" id="consultDate" type="date">
+      </div>
+      <div>
+        <label class="field-label">Vaidya</label>
+        <input class="patient-input" id="vaidyaName" type="text" placeholder="Vaidya name">
+      </div>
+    </div>
+  </div>
+
+  <div class="products-header">
+    <span>Treatment / Product</span>
+    <span style="text-align:center">Qty</span>
+  </div>
+
+  <div class="product-list" id="productList"></div>
+
+  <div class="notes-section">
+    <label class="field-label" style="margin-bottom:6px;display:block">Additional notes</label>
+    <textarea class="notes-input" id="notes" placeholder="Any additional instructions or notes for this prescription…"></textarea>
+  </div>
+
+  <div id="statusMsg" class="status"></div>
+
+  <div class="submit-row">
+    <button class="clear-btn" onclick="clearForm()">Clear form</button>
+    <button class="submit-btn" id="submitBtn" onclick="submitForm()">Send prescription</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+const EMAILJS_SERVICE_ID = 'service_vstuo5i';
+const EMAILJS_TEMPLATE_ID = 'template_urfgvk1';
+const EMAILJS_PUBLIC_KEY = '56Zd65Pwf3l9owWl-';
+
+const products = [
+  'Abhyanga Vata','Abhyanga Pitta','Abhyanga Kapha','Abhyanga 1 Tech',
+  'Avagha Bath','Griva Basti','Home Treatment Kit','Griva Picchu',
+  'Hrid Basti','Kaadidhara','Karana Purana','Kati Basti',
+  'Kati Basti (inc. Local Swedana)','Knee Basti 1','Knee Basti 2',
+  'Kshira Basti','Kshira Basti (inc. Local Swedana)','Liver Basti',
+  'Local Swedana','Matra Basti','Matra Basti (inc. Local Swedana)',
+  'Nasya','Netra Tarpana','Padabhyanga','Panchakarma 5 days',
+  'Patra Potali 1','Patra Potali 2','Patra Potali 3','Patra Potali 4',
+  'Patra Potali 4 (2 Technician)','Patra Potali + Half Abhyanga',
+  'Pinda Swedana','Pizichili','PK Programme','Podhikili (1 area)',
+  'Podhikili + Half Abhyanga (2 Technician)','Postage','Sarvanga Ksheera',
+  'Shiro Abhyanga','Shiro Basti','Shirodhara','Shiro Picchu',
+  'Shodhana','Shodhana Basti','Spa Treatments',
+  'Shodhana Basti + Local Swedana','Stomach Basti','Swedana',
+  'Takradhara','Udvartana','Uzhichil','Veda Oils','Vishesh','Yoni Picchu'
+];
+
+const list = document.getElementById('productList');
+products.forEach((name, i) => {
+  const row = document.createElement('div');
+  row.className = 'product-row';
+  row.innerHTML = `<span class="product-name">${name}</span><input class="qty-input" id="qty_${i}" type="number" min="0" placeholder="0" oninput="onQtyChange(this)">`;
+  list.appendChild(row);
+});
+
+function onQtyChange(el) {
+  const v = parseInt(el.value) || 0;
+  el.classList.toggle('has-value', v > 0);
+}
+
+function getSelected() {
+  return products.map((name, i) => {
+    const v = parseInt(document.getElementById('qty_' + i).value) || 0;
+    return v > 0 ? {name, qty: v} : null;
+  }).filter(Boolean);
+}
+
+function setStatus(msg, type) {
+  const el = document.getElementById('statusMsg');
+  el.textContent = msg;
+  el.className = 'status' + (type ? ' ' + type : '');
+}
+
+function clearForm() {
+  document.getElementById('patientName').value = '';
+  document.getElementById('consultDate').value = new Date().toISOString().split('T')[0];
+  document.getElementById('vaidyaName').value = '';
+  document.getElementById('notes').value = '';
+  products.forEach((_, i) => {
+    const el = document.getElementById('qty_' + i);
+    el.value = '';
+    el.classList.remove('has-value');
+  });
+  setStatus('', '');
+}
+
+function submitForm() {
+  const patient = document.getElementById('patientName').value.trim();
+  if (!patient) { alert('Please enter the patient name.'); return; }
+  const items = getSelected();
+  if (items.length === 0) { alert('Please add at least one treatment with a quantity.'); return; }
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  setStatus('Sending prescription…', 'sending');
+
+  const date = document.getElementById('consultDate').value || 'Not specified';
+  const vaidya = document.getElementById('vaidyaName').value.trim() || 'Not specified';
+  const notes = document.getElementById('notes').value.trim() || 'None';
+  const treatmentLines = items.map(x => `• ${x.name}: ${x.qty}`).join('\n');
+
+  emailjs.init(EMAILJS_PUBLIC_KEY);
+  emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+    to_email: 'hello@yourayurveda.co.uk',
+    patient_name: patient,
+    consult_date: date,
+    vaidya_name: vaidya,
+    treatment_list: treatmentLines,
+    notes: notes,
+    message: `PATIENT: ${patient}\nDATE: ${date}\nVAIDYA: ${vaidya}\n\nTREATMENTS PRESCRIBED:\n${treatmentLines}\n\nNOTES:\n${notes}`
+  }).then(() => {
+    setStatus('Prescription sent successfully to hello@yourayurveda.co.uk', 'success');
+    btn.disabled = false;
+    // Clear quantities only, keep patient info for follow-up entries
+    products.forEach((_, i) => {
+      const el = document.getElementById('qty_' + i);
+      el.value = '';
+      el.classList.remove('has-value');
+    });
+    document.getElementById('notes').value = '';
+  }).catch(err => {
+    setStatus('Failed to send. Please check your connection and try again.', 'error');
+    btn.disabled = false;
+    console.error(err);
+  });
+}
+
+document.getElementById('consultDate').value = new Date().toISOString().split('T')[0];
+</script>
+</body>
+</html>
